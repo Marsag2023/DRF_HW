@@ -9,13 +9,13 @@ from lms.views import (LessonCreateAPIView, LessonDestroyAPIView,
 app_name = LmsConfig.name
 
 router = SimpleRouter()
-router.register("well", WellViewSet)
+router.register("", WellViewSet)
 
 urlpatterns = [
-    path("lessons/", LessonListAPIView.as_view(), name="lesson_list"),
-    path("lessons/<int:pk>/", LessonRetrieveAPIView.as_view(), name="lesson_retrieve"),
-    path("lessons/create/", LessonCreateAPIView.as_view(), name="lesson_create"),
-    path("lessons/<int:pk>/update/", LessonUpdateAPIView.as_view(), name="lesson_update"),
-    path("lessons/<int:pk>/delete/", LessonDestroyAPIView.as_view(), name="lesson_delete"),
+    path("lesson/", LessonListAPIView.as_view(), name="lesson_list"),
+    path("lesson/<int:pk>/", LessonRetrieveAPIView.as_view(), name="lesson_retrieve"),
+    path("lesson/create/", LessonCreateAPIView.as_view(), name="lesson_create"),
+    path("lesson/<int:pk>/update/", LessonUpdateAPIView.as_view(), name="lesson_update"),
+    path("lesson/<int:pk>/delete/", LessonDestroyAPIView.as_view(), name="lesson_delete"),
 ]
 urlpatterns += router.urls

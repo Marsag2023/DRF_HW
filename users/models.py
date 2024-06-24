@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
+
 
 NULLABLE = {"null": True, "blank": True}
 
@@ -22,10 +22,12 @@ class User(AbstractUser):
         **NULLABLE,
         help_text="Введите имя в Telegram"
     )
-    country = CountryField(
-        verbose_name="Страна", **NULLABLE, help_text="Выберите страну"
+    city = models.CharField(
+        max_length=50,
+        verbose_name="Город",
+        **NULLABLE,
+        help_text="Введите город"
     )
-
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
