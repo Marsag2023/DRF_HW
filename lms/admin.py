@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from lms.models import Lesson, Well
+
+admin.site.register(Lesson)
+admin.site.register(Well)

@@ -1,9 +1,16 @@
 from rest_framework.serializers import ModelSerializer
 from django.contrib.auth.hashers import make_password
-from users.models import User
+from users.models import User, Payment
+
+
+class PaymentSerializer(ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = '__all__'
 
 
 class UserSerializer(ModelSerializer):
+
     class Meta:
         model = User
         fields = "__all__"

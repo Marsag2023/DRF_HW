@@ -4,12 +4,18 @@ from rest_framework.generics import (CreateAPIView, DestroyAPIView,
 from rest_framework.viewsets import ModelViewSet
 
 from lms.models import Lesson, Well
-from lms.serializer import WellSerializer, LessonSerializer
+from lms.serializer import WellSerializer, LessonSerializer, WellDetailSerializer
 
 
 class WellViewSet(ModelViewSet):
     queryset = Well.objects.all()
     serializer_class = WellSerializer
+
+    def get_serializer_class(self):
+
+        if self.action == "retrieve":
+            return WellDetailSerializer
+        return WellSerializer
 
 
 class LessonCreateAPIView(CreateAPIView):

@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
+from lms.models import Well, Lesson
 
 NULLABLE = {"null": True, "blank": True}
 
@@ -37,3 +38,25 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+
+
+class Payment(models.Model):
+
+    PAYMENT_METHOD_CHOICES = [
+        ("CASH", "Наличными"),
+        ("TRANSFER", "Перевод на счет"),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+    date_payment = models.DateField(verbose_name="Дата оплаты", help_text="Введите дату оплаты", **NULLABLE)
+    well = models.ForeignKey(
+        Well, on_delete=models.CASCADE, verbose_name="Курс", **NULLABLE, help_text="Введите название курса")
+    lesson = models.ForeignKey(
+        Lesson, on_delete=models.CASCADE, verbose_name="Урок", **NULLABLE, help_text="Введите название урока")
+    price = models.PositiveIntegerField(verbose_name="Цена", help_text="Введите сумму")
+    payment_method = models.CharField(max_length=30, choices=PAYMENT_METHOD_CHOICES, default="CASH",
+                                      verbose_name="Способ оплаты", help_text="Введите способ оплаты")
+
+    class Meta:
+        verbose_name = "Платеж"
+        verbose_name_plural = "Платежи"
