@@ -2,7 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
-from lms.models import Well, Lesson
+from config import settings
+from lms.models import Lesson, Well
 
 NULLABLE = {"null": True, "blank": True}
 
@@ -12,8 +13,12 @@ class User(AbstractUser):
     email = models.EmailField(
         unique=True, verbose_name="Email", help_text="Введите адрес электронной почты"
     )
-    avatar = models.ImageField(upload_to='users/', verbose_name='Аватар', **NULLABLE,
-                               help_text='Загрузите свой аватар')
+    avatar = models.ImageField(
+        upload_to="users/",
+        verbose_name="Аватар",
+        **NULLABLE,
+        help_text="Загрузите свой аватар"
+    )
     phone = PhoneNumberField(
         verbose_name="Телефон", help_text="Введите номер телефона", **NULLABLE
     )
@@ -24,10 +29,7 @@ class User(AbstractUser):
         help_text="Введите имя в Telegram"
     )
     city = models.CharField(
-        max_length=50,
-        verbose_name="Город",
-        **NULLABLE,
-        help_text="Введите город"
+        max_length=50, verbose_name="Город", **NULLABLE, help_text="Введите город"
     )
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -47,15 +49,34 @@ class Payment(models.Model):
         ("TRANSFER", "Перевод на счет"),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
-    date_payment = models.DateField(verbose_name="Дата оплаты", help_text="Введите дату оплаты", **NULLABLE)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь"
+    )
+    date_payment = models.DateField(
+        verbose_name="Дата оплаты", help_text="Введите дату оплаты", **NULLABLE
+    )
     well = models.ForeignKey(
-        Well, on_delete=models.CASCADE, verbose_name="Курс", **NULLABLE, help_text="Введите название курса")
+        Well,
+        on_delete=models.CASCADE,
+        verbose_name="Курс",
+        **NULLABLE,
+        help_text="Введите название курса"
+    )
     lesson = models.ForeignKey(
-        Lesson, on_delete=models.CASCADE, verbose_name="Урок", **NULLABLE, help_text="Введите название урока")
+        Lesson,
+        on_delete=models.CASCADE,
+        verbose_name="Урок",
+        **NULLABLE,
+        help_text="Введите название урока"
+    )
     price = models.PositiveIntegerField(verbose_name="Цена", help_text="Введите сумму")
-    payment_method = models.CharField(max_length=30, choices=PAYMENT_METHOD_CHOICES, default="CASH",
-                                      verbose_name="Способ оплаты", help_text="Введите способ оплаты")
+    payment_method = models.CharField(
+        max_length=30,
+        choices=PAYMENT_METHOD_CHOICES,
+        default="CASH",
+        verbose_name="Способ оплаты",
+        help_text="Введите способ оплаты",
+    )
 
     class Meta:
         verbose_name = "Платеж"

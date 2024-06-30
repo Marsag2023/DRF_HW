@@ -12,6 +12,7 @@ class LessonSerializer(ModelSerializer):
 
 class WellSerializer(ModelSerializer):
     count_lessons = SerializerMethodField()
+    lessons = LessonSerializer(source="lesson_set", many=True, read_only=True)
 
     def get_count_lessons(self, well):
         """
@@ -29,8 +30,10 @@ class WellDetailSerializer(ModelSerializer):
 
     def get_well_lessons(self, well):
         lessons_set = Lesson.objects.filter(well=well)
-        return [(lesson.title, lesson.description, lesson.url_video) for lesson in
-                lessons_set]
+        return [
+            (lesson.title, lesson.description, lesson.url_video)
+            for lesson in lessons_set
+        ]
 
     class Meta:
         model = Well
