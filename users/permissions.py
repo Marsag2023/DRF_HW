@@ -5,6 +5,7 @@ class IsModerator(BasePermission):
     """
     Разрешает доступ только пользователям из группы «Модераторы».
     """
+
     def has_permission(self, request, view):
         return request.user.groups.filter(name="moderator").exists()
 
@@ -15,6 +16,4 @@ class IsOwner(BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        if obj.owner == request.user:
-            return True
-        return False
+        return obj.owner == request.user

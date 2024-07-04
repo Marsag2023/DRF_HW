@@ -40,6 +40,7 @@ class Well(models.Model):
     class Meta:
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"
+        ordering = ('title',)
 
 
 class Lesson(models.Model):
@@ -86,3 +87,21 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = "Урок"
         verbose_name_plural = "Уроки"
+        ordering = ('title',)
+
+
+class Subscription(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        **NULLABLE,
+        verbose_name="Пользователь",
+    )
+    well = models.ForeignKey(Well, on_delete=models.CASCADE, verbose_name="Курс")
+
+    def __str__(self):
+        return f"{self.owner}  {self.well}"
+
+    class Meta:
+        verbose_name = "Подписка"
+        verbose_name_plural = "Подписки"
