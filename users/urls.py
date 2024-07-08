@@ -6,13 +6,12 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
 from users.apps import UsersConfig
 from users.views import (PaymentListAPIView, UserCreateAPIView,
                          UserDeleteAPIView, UserListAPIView,
-                         UserRetrieveAPIView, UserUpdateAPIView)
+                         UserRetrieveAPIView, UserUpdateAPIView, PaymentCreateAPIView)
 
 app_name = UsersConfig.name
 
 
 urlpatterns = [
-    path("payments/", PaymentListAPIView.as_view(), name="payments-list"),
     path("register/", UserCreateAPIView.as_view(), name="register"),
     path("", UserListAPIView.as_view(), name="list"),
     path("retrieve/<int:pk>/", UserRetrieveAPIView.as_view(), name="retrieve"),
@@ -20,12 +19,11 @@ urlpatterns = [
     path("delete/<int:pk>/", UserDeleteAPIView.as_view(), name="delete"),
     path(
         "login/",
-        TokenObtainPairView.as_view(permission_classes=(AllowAny,)),
-        name="login",
-    ),
+        TokenObtainPairView.as_view(permission_classes=(AllowAny,)),name="login"),
     path(
         "token/refresh/",
-        TokenRefreshView.as_view(permission_classes=(AllowAny,)),
-        name="token_refresh",
-    ),
+        TokenRefreshView.as_view(permission_classes=(AllowAny,)),name="token_refresh"),
+
+    path('payments/', PaymentCreateAPIView.as_view(), name='payment-create'),
+    path('payments/', PaymentListAPIView.as_view(), name='payment-list'),
 ]

@@ -49,7 +49,7 @@ class Payment(models.Model):
         ("TRANSFER", "Перевод на счет"),
     ]
 
-    owner = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь"
     )
     date_payment = models.DateField(
@@ -73,10 +73,15 @@ class Payment(models.Model):
     payment_method = models.CharField(
         max_length=30,
         choices=PAYMENT_METHOD_CHOICES,
-        default="CASH",
+        default="TRANSFER",
         verbose_name="Способ оплаты",
-        help_text="Введите способ оплаты",
+        help_text="Введите способ оплаты"
     )
+    link = models.URLField(max_length=400, verbose_name="Ссылка на оплату", **NULLABLE)
+    session_id = models.CharField(max_length=255, verbose_name="Id сессии оплаты", **NULLABLE)
+
+    def __str__(self):
+        return f'{self.user}, {self.date_payment}, {self.price}, {self.well}, {self.lesson}'
 
     class Meta:
         verbose_name = "Платеж"

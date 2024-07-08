@@ -55,7 +55,6 @@ class LessonListAPIView(ListAPIView):
     pagination_class = MyPagination
 
 
-
 class LessonRetrieveAPIView(RetrieveAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
