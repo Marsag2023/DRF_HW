@@ -10,6 +10,7 @@ from lms.pagination import MyPagination
 from lms.serializer import (LessonSerializer, SubscriptionSerializer,
                             WellDetailSerializer, WellSerializer)
 from users.permissions import IsModerator, IsOwner
+from lms.tasks import send_mail_update
 
 
 class WellViewSet(ModelViewSet):
@@ -30,6 +31,10 @@ class WellViewSet(ModelViewSet):
         well = serializer.save()
         well.owner = self.request.user
         well.save()
+
+    def perform_update(self, serializer):
+        well = serializer.save()
+        send_mail_update.delay(well_id=well.pk)
 
     def get_serializer_class(self):
 
@@ -89,36 +94,3 @@ class SubscriptionAPIView(APIView):
             Subscription.objects.create(owner=owner, well=well)
             message = "Подписка включена"
         return Response({"Сообщние": message})
-
-
-# class SubscriptionCreateAPIView(generics.CreateAPIView):
-#     serializer_class = SubscriptionSerializer
-#     queryset = Subscription.objects.all()
-#
-#
-#     def perform_create(self, serializer):
-#         course_id = self.kwargs.get('pk')
-#         course = Well.objects.get(pk=well_id)
-#
-#         new_subscription = serializer.save()
-#         new_subscription.owner = self.request.user
-#         new_subscription.well = well
-#         new_subscription.save()
-#
-#
-# class SubscriptionDestroyAPIView(generics.DestroyAPIView):
-#     queryset = Subscription.objects.all()
-#     # permission_classes = [IsAuthenticated]
-#     permission_classes = [AllowAny]  # На время проведения тестов
-#
-#     def destroy(self, request, *args, **kwargs):
-#         course_id = self.kwargs.get('pk')
-#         user_id = self.request.user.pk
-#
-#         subscription = Subscription.objects.get(course_id=course_id, user_id=user_id)
-#
-#         if self.request.user != subscription.user:
-#             raise serializers.ValidationError('Нельзя удалить чужую подписку!')
-#         else:
-#             self.perform_destroy(subscription)
-#             return Response(status=status.HTTP_204_NO_CONTENT)
