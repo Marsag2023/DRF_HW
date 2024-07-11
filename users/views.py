@@ -3,10 +3,12 @@ from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
                                      UpdateAPIView)
 from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from users.models import Payment, User
 from users.serializer import PaymentSerializer, UserSerializer
 from users.services import create_stripe_product, create_stripe_price, create_stripe_session
+from datetime import datetime
 
 
 class UserCreateAPIView(CreateAPIView):
@@ -38,6 +40,15 @@ class UserUpdateAPIView(UpdateAPIView):
 class UserDeleteAPIView(DestroyAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+
+class UserTokenObtainPairView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        user = User.objects.get(email=request.data["email"])
+        user.last_login = datetime.now()
+        user.save()
+        return response
 
 
 class PaymentCreateAPIView(CreateAPIView):
