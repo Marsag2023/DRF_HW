@@ -16,4 +16,7 @@ def send_mail_update(well_id):
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[subscription.owner.email],
         )
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
