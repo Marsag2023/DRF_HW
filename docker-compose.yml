@@ -5,13 +5,13 @@ networks:
     driver: bridge
 services:
   redis:
-    image: redis:latest
+    image: redis:6.2.4-alpine
     restart: on-failure
     expose:
       - "6379"
 
   db:
-    image: postgres
+    image: postgres:15.1-alpine
     restart: on-failure
     env_file:
       - .env
@@ -20,7 +20,7 @@ services:
     volumes:
       - pg_data:/var/liv/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "-c", "pg_isready -U $POSTGRES_USER" ]
+      test: [ "CMD-SHELL", "-c", "pg_isready -U $POSTGRES_USER" -d $POSTGRES_DB" ]
       interval: 10s
       retries: 5
       timeout: 5s
